@@ -26,11 +26,16 @@ class _ActionsScreenState extends State<ActionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+
           title: TextApp(
            text: AppLocalizations.of(context)!.action,
             color:  Color(0xFF0D0E56),
             fontWeight: FontWeight.bold,
-            fontSize: SizeConfig.scaleTextFont(20),
+            fontSize: SizeConfig.scaleTextFont(24),
+            textAlign: TextAlign.center,
+
           ),
         ),
         body: Padding(

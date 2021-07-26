@@ -24,9 +24,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   late TextEditingController _nameTextController;
   late TextEditingController _emailTextController;
   late TextEditingController _dailyTextController;
-  Currency? _currency;
+  Currency? currency;
   String? pinCode = '';
-  bool _createdEnabled = false;
 
   @override
   void initState() {
@@ -178,7 +177,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                       Divider(thickness: 1, height: SizeConfig.scaleHeight(1)),
                       MainContainerWidget(
                         title: AppLocalizations.of(context)!.currency,
-                        value: _currency == null ? '' : _currency!.nameEn,
+                        value: currency == null ? '' : currency!.nameEn,
                         iconData: Icons.arrow_forward_ios,
                         onTap: () async {
                           Currency selectedCurrency = await Navigator.push(
@@ -188,7 +187,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                             ),
                           );
                           setState(() {
-                            _currency = selectedCurrency;
+                            currency = selectedCurrency;
                           });
                         },
 
@@ -290,7 +289,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
         _emailTextController.text.isNotEmpty &&
         _dailyTextController.text.isNotEmpty &&
         pinCode != null &&
-        _currency != null) {
+        currency != null) {
       return true;
     }
 
@@ -304,7 +303,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
     user.email = _emailTextController.text;
     user.dayLimit = double.parse(_dailyTextController.text);
     user.pin = int.parse(pinCode!);
-    user.currencyId = _currency!.id;
+    user.currencyId = currency!.id;
     return user;
   }
 }

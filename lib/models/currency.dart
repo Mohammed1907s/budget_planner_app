@@ -5,6 +5,7 @@ class Currency extends DbTable{
   late int id;
   late String nameEn;
   late String nameAr;
+  bool checked = false;
 
   static const TABLE_NAME = 'currencies';
 

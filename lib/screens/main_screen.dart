@@ -1,4 +1,5 @@
 import 'package:budget_planner_app/getx_controllers/add_operation_getx_controller.dart';
+import 'package:budget_planner_app/getx_controllers/bn_getx_controller.dart';
 import 'package:budget_planner_app/getx_controllers/category_getx_controller.dart';
 import 'package:budget_planner_app/models/action_home_screen.dart';
 import 'package:budget_planner_app/screens/action_home_screen/add_operation .dart';
@@ -23,41 +24,63 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
-  int currentIndex = 0;
-
-  CategoryGetxController categoryGetxController = Get.put(CategoryGetxController());
-  ActionsGetxController actionGetxController = Get.put(ActionsGetxController());
-
-  List<ActionHomeScreen> screens = <ActionHomeScreen>[
-    ActionHomeScreen(title: 'Home', widget: HomeScreen()),
-    ActionHomeScreen(title: 'Category', widget: CategoriesScreen()),
-
-    ActionHomeScreen(title: 'Profile', widget: ProfileScreen()),
-    ActionHomeScreen(title: 'Tips', widget: TipsScreen()),
-  ];
+  CategoryGetxController _categoryGetxController = Get.put(CategoryGetxController());
+  ActionsGetxController _actionsGetxController = Get.put(ActionsGetxController());
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: currentIndex == 4 ? Color(0xFFF1F4FF) : Colors.white,
-      extendBodyBehindAppBar: true,
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 0,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentIndex,
-        showUnselectedLabels: true,
-        selectedItemColor: Color(0xFF472FC8),
-        unselectedItemColor: Color(0xFF7B7C98),
-        selectedLabelStyle: TextStyle(
-          fontFamily: 'montserrat',
-          fontWeight: FontWeight.bold,
-          fontSize: SizeConfig.scaleTextFont(10),
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontFamily: 'montserrat',
-          fontWeight: FontWeight.bold,
-          fontSize: SizeConfig.scaleTextFont(10),
-        ),
+    return GetX(
+      init: BnGetxController(),
+      builder: (BnGetxController controller) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: controller.currentIndex.value != 3
+              ? Colors.white
+              : Color(0xFFF1F4FF),
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: controller.currentIndex.value != 3
+                ? Colors.white
+                : Color(0xFFF1F4FF),
+            centerTitle: true,
+            title: Text(controller.title,style: TextStyle(color: Color(0xFF351DB6)),),
+            actions: [
+              Visibility(
+                visible: controller.index == 0,
+                child: IconButton(
+                  onPressed: () =>
+                      Navigator.pushNamed(context, '/settings_screen'),
+                  icon: Icon(Icons.settings,color: Color(0xFF351DB6),),
+                ),
+              ),
+              Visibility(
+                visible: controller.index == 1,
+                child: IconButton(
+                  onPressed: () =>
+                      Navigator.pushNamed(context, '/add_category'),
+                  icon: Icon(Icons.add_circle_outlined,color: Color(0xFF351DB6),),
+                ),
+              ),
+            ],
+          ),
+          body: controller.screen,
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: (int currentIndex) {
+              if (currentIndex != 2)
+                controller.changeSelectedIndex(index: currentIndex);
+            },
+            currentIndex: controller.index,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Color(0xFF0D0E56),
+            selectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: SizeConfig.scaleWidth(10),
+            ),
+            unselectedItemColor: Color(0xFFD3CFEA),
+            unselectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: SizeConfig.scaleWidth(10),
+            ),
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.insert_chart_outlined_outlined),
@@ -80,12 +103,11 @@ class _MainScreenState extends State<MainScreen> {
                 label: AppLocalizations.of(context)!.tips,
               ),
             ],
-
-        ),
-
+          ),
+        );
+      },
     );
   }
-
 }
 
 /*class MainScreen extends StatefulWidget {

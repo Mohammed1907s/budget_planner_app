@@ -1,11 +1,13 @@
 import 'package:budget_planner_app/getx_controllers/add_operation_getx_controller.dart';
 import 'package:budget_planner_app/models/actions.dart';
+import 'package:budget_planner_app/models/user.dart';
 import 'package:budget_planner_app/screens/action_screen.dart';
 import 'package:budget_planner_app/storge/app_pref_controller.dart';
 import 'package:budget_planner_app/utils/size_config.dart';
 import 'package:budget_planner_app/widgets/action_widget.dart';
 import 'package:budget_planner_app/widgets/actions_date_text.dart';
 import 'package:budget_planner_app/widgets/app_text.dart';
+import 'package:budget_planner_app/widgets/circular_progress_info.dart';
 import 'package:budget_planner_app/widgets/elevated_button_app.dart';
 import 'package:budget_planner_app/widgets/limit_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,144 +28,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return GetX<ActionsGetxController>(
+        builder: (ActionsGetxController controller) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.scaleWidth(25)),
       child: Column(
         children: [
-          SizedBox(
-            height: SizeConfig.scaleHeight(110),
-          ),
-          Visibility(
-            child: LimitHome(
-              msg: AppLocalizations.of(context)!.rich_limit,
-              onTap: () {
-                setState(() {
-                  hideMsg = false;
-                });
-              },
-            ),
-            visible: (SharedPrefController()
-                .getUser()
-                .dayLimit <
-                ActionsGetxController.to.totalExpenses) &&
-                hideMsg,
-          ),
-          SizedBox(
-            height: SizeConfig.scaleHeight(74),
-          ),
+
           Container(
-            width: SizeConfig.scaleHeight(260),
             height: SizeConfig.scaleHeight(260),
+            width: SizeConfig.scaleWidth(260),
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xFFE9E7F1),
-                  offset: Offset(0, SizeConfig.scaleHeight(13)),
-                  blurRadius: SizeConfig.scaleHeight(11),
+                  color: Color(0xFFF1F4FF).withAlpha(48),
+                  offset: Offset(0, 13),
+                  blurRadius: 11,
                   spreadRadius: 0,
-                ),
+                )
               ],
             ),
             child: CircularPercentIndicator(
-              reverse: false,
-              startAngle: 180,
-              radius: SizeConfig.scaleHeight(259.6),
-              lineWidth: 10.0,
-              percent: getPercent,
-              restartAnimation: true,
-              progressColor: SharedPrefController()
-                  .getUser()
-                  .dayLimit > ActionsGetxController.to.totalExpenses
-                  ? Color(0xFF0D0E56)
-                  : Colors.red.shade900,
-              backgroundColor: Colors.white,
-              animation: true,
-              onAnimationEnd: () {},
-              center: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: ("\$  "),
-                          style: TextStyle(
-                            color: Color(0xFF0D0E56),
-                            fontSize: SizeConfig.scaleTextFont(18),
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        TextSpan(
-                          text: (ActionsGetxController.to.totalExpenses
-                              .toString()),
-                          style: TextStyle(
-                            color: Color(0xFF0D0E56),
-                            fontFamily: 'Montserrat',
-                            fontSize: SizeConfig.scaleTextFont(40),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.scaleHeight(0.3),
-                  ),
-                  TextApp(
-                    text :AppLocalizations.of(context)!.spent_today,
-                    color: Color(0xff7B7C98),
-                    fontSize: SizeConfig.scaleTextFont(16),
-                    textAlign: TextAlign.center, fontWeight: FontWeight.w400,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.scaleHeight(13),
-                  ),
-                  Divider(
-                    indent: SizeConfig.scaleWidth(33),
-                    endIndent: SizeConfig.scaleWidth(33),
-                    color: Color(0xFFE9E7F1),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.scaleHeight(11),
-                  ),
-                  TextApp(
-                    text : AppLocalizations.of(context)!.balance_for_today,
-                    color: Color(0xff7B7C98),
-                    fontSize: SizeConfig.scaleTextFont(16),
-                    textAlign: TextAlign.center, fontWeight: FontWeight.w400,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.scaleHeight(6),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: ("\$  "),
-                          style: TextStyle(
-                            color: Color(0xff00BEA1),
-                            fontSize: SizeConfig.scaleTextFont(13),
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'montserrat',
-                          ),
-                        ),
-                        TextSpan(
-                          text:
-                          (ActionsGetxController.to.totalIncome.toString()),
-                          style: TextStyle(
-                            color: Color(0xff00BEA1),
-                            fontSize: SizeConfig.scaleTextFont(23.1),
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'montserrat',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              radius: SizeConfig.scaleHeight(260),
+              lineWidth: 11.0,
+              percent: controller.totalExpenses.value /
+                  controller.totalIncomes.value,
+              backgroundColor: Color(0xFF472FC8).withOpacity(0.1),
+              progressColor: Color(0xFF472FC8),
+              circularStrokeCap: CircularStrokeCap.round,
+              center: CircularProgressInfo(
+                expenses: controller.totalExpenses.value,
+                balance: controller.totalIncomes.value,
               ),
             ),
           ),
@@ -238,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  });
   }
 
   navigationToActionScreen({required BuildContext context}) {
@@ -250,9 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   double get getPercent {
-    if (ActionsGetxController.to.totalExpenses > SharedPrefController()
+    if (ActionsGetxController.to.totalExpenses.value > SharedPrefController()
         .getUser()
-        .dayLimit && ActionsGetxController.to.totalExpenses != 0) {
+        .dayLimit && ActionsGetxController.to.totalExpenses.value != 0) {
       return 0.99;
     }
     return ActionsGetxController.to.totalExpenses / SharedPrefController().getUser().dayLimit;

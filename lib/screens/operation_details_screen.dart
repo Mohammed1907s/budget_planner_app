@@ -2,6 +2,7 @@
 import 'package:budget_planner_app/getx_controllers/category_getx_controller.dart';
 import 'package:budget_planner_app/getx_controllers/currency_getx_controller.dart';
 import 'package:budget_planner_app/models/actions.dart';
+import 'package:budget_planner_app/models/currency.dart';
 import 'package:budget_planner_app/utils/size_config.dart';
 import 'package:budget_planner_app/widgets/app_text.dart';
 import 'package:budget_planner_app/widgets/app_text_field.dart';
@@ -14,6 +15,7 @@ import 'package:intl/intl.dart';
 
 class OperationDetailsScreen extends StatelessWidget {
   final Operation operation;
+  Currency? _currency;
 
   OperationDetailsScreen({required this.operation});
 
@@ -109,8 +111,7 @@ class OperationDetailsScreen extends StatelessWidget {
                     Divider(thickness: 1 , color: Color(0xFF7B7C98)),
                     MainContainerWidget(
                       title: AppLocalizations.of(context)!.currency,
-                      value: CurrencyGetxController.to
-                          .getCurrencyName(operation.currencyId),
+                      value: _currency?.nameEn ?? 'None',
                       iconData: Icons.arrow_forward_ios,
                     ),
                   ],

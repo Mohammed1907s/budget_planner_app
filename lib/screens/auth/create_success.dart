@@ -15,6 +15,13 @@ class CreateAccountSuccess extends StatefulWidget {
 
 class _CreateAccountSuccessState extends State<CreateAccountSuccess> {
   @override
+  void initState() {
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.pushReplacementNamed(context, '/main_screen');
+    });
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

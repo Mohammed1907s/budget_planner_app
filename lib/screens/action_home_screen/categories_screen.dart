@@ -50,9 +50,6 @@ class _CategoriesScreenState extends State<CategoriesScreen>
         controller.category.where((element) => !element.expense).toList();
         return Column(
           children: [
-            SizedBox(
-              height: SizeConfig.scaleHeight(110),
-            ),
             Container(
               height: SizeConfig.scaleHeight(40),
               margin:

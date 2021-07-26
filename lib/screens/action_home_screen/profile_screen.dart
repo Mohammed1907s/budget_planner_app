@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> with Helpers {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.only(top: SizeConfig.scaleHeight(103)),
+        padding: EdgeInsets.only(top: SizeConfig.scaleHeight(25),right: SizeConfig.scaleWidth(20),left: SizeConfig.scaleWidth(20)),
         child: Column(
           children: [
         Center(child: SquareImage(name: 'ic-profile-inactive')),
@@ -151,10 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> with Helpers {
               Divider(thickness: 1, height: SizeConfig.scaleHeight(1)),
               MainContainerWidget(
                   title: AppLocalizations.of(context)!.currency,
-                  value: currency == null
-                      ? CurrencyGetxController.to
-                      .getCurrencyName(user.currencyId)
-                      : currency!.nameEn,
+                  value: currency?.nameEn ?? 'None',
                   iconData: Icons.arrow_forward_ios,
                   onTap: () async{
             Currency selectedCurrency = await Navigator.push(context,MaterialPageRoute(builder: (context) => CurrencyScreen(),),);
@@ -212,15 +209,13 @@ class _ProfileScreenState extends State<ProfileScreen> with Helpers {
         ),
       ),
     ),
-    Padding(
-    padding:EdgeInsets.symmetric(horizontal: SizeConfig.scaleWidth(35)),
-    child: ElevatedButtonApp(
+    SizedBox(height: SizeConfig.scaleHeight(25),),
+    ElevatedButtonApp(
     text: AppLocalizations.of(context)!.save,
     onPressed: () async {
     await performSave();
     setState(() {});
     }, color: Color(0xff472FC8),
-    ),
     ),
     ],
     ),

@@ -1,6 +1,9 @@
 
 import 'package:budget_planner_app/database/controllers/actions_db_controller.dart';
 import 'package:budget_planner_app/models/actions.dart';
+import 'package:budget_planner_app/models/currency.dart';
+import 'package:budget_planner_app/models/user_action.dart';
+import 'package:budget_planner_app/utils/enums.dart';
 import 'package:get/get.dart';
 
 class ActionsGetxController extends GetxController {
@@ -8,6 +11,9 @@ class ActionsGetxController extends GetxController {
   ActionDbController dbController = ActionDbController();
 
   static ActionsGetxController get to => Get.find();
+  late Currency userCurrency;
+  RxDouble totalExpenses = 0.0.obs;
+  RxDouble totalIncomes = 0.0.obs;
 
   @override
   void onInit() {
@@ -22,6 +28,7 @@ class ActionsGetxController extends GetxController {
   }
 
   Future<void> readOperation() async {
+
     operations = await dbController.read();
     update();
   }
@@ -66,7 +73,7 @@ class ActionsGetxController extends GetxController {
     return operation;
   }
 
-  double get totalExpenses {
+  /*double get totalExpenses {
     double _totalExpenses = 0.0;
     todayOperations.forEach((element) {
       if(element.expense){
@@ -85,6 +92,56 @@ class ActionsGetxController extends GetxController {
     }) ;
     return _totalIncome;
   }
+*/
+  void updateIncomeAndExpenses(UserAction action) {
+    var amount = _convertCurrency(
+        amount: action.amount, actionCurrencyId: action.currencyId);
+    action.expense
+        ? totalExpenses.value += amount
+        : totalIncomes.value += amount;
+  }
+  double _convertCurrency(
+      {required double amount, required int actionCurrencyId}) {
+    if (userCurrency.id == Currencies.Nis.index + 1) {
+      if (actionCurrencyId == Currencies.Nis.index + 1) {
+        return amount;
+      } else if (actionCurrencyId == Currencies.Dollar.index + 1) {
+        //from DOLLAR -> NIS
+        print('from DOLLAR -> NIS');
+        return amount * 3.2;
+      } else if (actionCurrencyId == Currencies.Dinar.index + 1) {
+        //from DINAR -> NIS
+        print('from DINAR -> NIS');
+        return amount * 4.6;
+      }
+    } else if (userCurrency.id == Currencies.Dollar.index + 1) {
+      if (actionCurrencyId == Currencies.Nis.index + 1) {
+        //from NIS -> DOLLAR
+        print('from NIS -> DOLLAR');
+        return amount / 3.2;
+      } else if (actionCurrencyId == Currencies.Dollar.index + 1) {
+        return amount;
+      } else if (actionCurrencyId == Currencies.Dinar.index + 1) {
+        //from DINAR -> DOLLAR
+        print('from DINAR -> DOLLAR');
+        return amount * .7;
+      }
+    } else if (userCurrency.id == Currencies.Dinar.index + 1) {
+      if (actionCurrencyId == Currencies.Nis.index + 1) {
+        //from NIS -> DINAR
+        print('from NIS -> DINAR');
+        return amount / 4.6;
+      } else if (actionCurrencyId == Currencies.Dollar.index + 1) {
+        //from DOLLAR -> DINAR
+        print('from DOLLAR -> DINAR');
+        return amount / .7;
+      } else if (actionCurrencyId == Currencies.Dinar.index + 1) {
+        return amount;
+      }
+    }
+    return 0;
+  }
+
 
 
 }
