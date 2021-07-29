@@ -1,4 +1,5 @@
 
+
 import 'package:budget_planner_app/getx_controllers/category_getx_controller.dart';
 import 'package:budget_planner_app/getx_controllers/currency_getx_controller.dart';
 import 'package:budget_planner_app/models/actions.dart';
@@ -24,21 +25,36 @@ class OperationDetailsScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: TextApp(
+          text: AppLocalizations.of(context)!.expense_details,
+          color: Color(0xFF0D0E56),
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(
             right: SizeConfig.scaleWidth(20),
             left: SizeConfig.scaleWidth(20),
-            top: SizeConfig.scaleHeight(80),
+            top: SizeConfig.scaleHeight(130)
+
           ),
           child: Column(
             children: [
+              
+
               Center(child: SquareImage(name: 'icon_wallet')),
               SizedBox(
                 height: SizeConfig.scaleHeight(13),
               ),
               TextApp(
-                  text: AppLocalizations.of(context)!.add_category,
+                  text: CategoryGetxController.to
+                      .getCategoryName(operation.categoryId),
                   color: Color(0xff0D0E56),
                   fontSize: 20,
                   fontWeight: FontWeight.w700),
@@ -102,16 +118,17 @@ class OperationDetailsScreen extends StatelessWidget {
                           .getCategoryName(operation.categoryId),
                       iconData: Icons.arrow_forward_ios,
                     ),
-                    Divider(thickness: 1, color: Color(0xFF7B7C98)),
+                    Divider(thickness: SizeConfig.scaleHeight(1) ,height: 0, color: Color(0xFF7B7C98)),
                     MainContainerWidget(
                       title: AppLocalizations.of(context)!.date,
                       value: DateFormat.yMd('en').format(operation.date),
                       iconData: Icons.arrow_forward_ios,
                     ),
-                    Divider(thickness: 1 , color: Color(0xFF7B7C98)),
+                    Divider(thickness: SizeConfig.scaleHeight(1) ,height: 0, color: Color(0xFF7B7C98)),
                     MainContainerWidget(
                       title: AppLocalizations.of(context)!.currency,
-                      value: _currency?.nameEn ?? 'None',
+                      value: CurrencyGetxController.to
+                          .getCurrencyName(operation.currencyId),
                       iconData: Icons.arrow_forward_ios,
                     ),
                   ],

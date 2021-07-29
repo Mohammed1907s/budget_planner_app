@@ -4,7 +4,48 @@ import 'package:budget_planner_app/storge/app_pref_controller.dart';
 import 'package:get/get.dart';
 
 class CurrencyGetxController extends GetxController {
-  final CurrencyDbController _dbController = CurrencyDbController();
+
+  List<Currency> currencies = [];
+  CurrencyDbController dbController = CurrencyDbController();
+
+  static CurrencyGetxController get to => Get.find();
+
+  @override
+  void onInit() {
+    readCurrencies();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    currencies.clear();
+    super.onClose();
+  }
+
+  Future<void> readCurrencies() async {
+    currencies = await dbController.read();
+    update();
+  }
+
+  Future<void> deleteAllRows() async {
+    await dbController.deleteAllRows();
+    currencies.clear();
+    update();
+  }
+
+  String getCurrencyName(int id) {
+    int index = currencies.indexWhere((element) => id == element.id);
+    return SharedPrefController().languageCode == 'ar'
+        ? currencies[index].nameAr
+        : currencies[index].nameEn;
+  }
+
+  Currency getCurrencyById(int id) {
+    int index = currencies.indexWhere((element) => id == element.id);
+    return currencies[index];
+  }
+}
+/*final CurrencyDbController _dbController = CurrencyDbController();
   RxList<Currency> currencies = <Currency>[].obs;
 
   static CurrencyGetxController get to => Get.find();
@@ -44,5 +85,4 @@ class CurrencyGetxController extends GetxController {
     currencies.forEach((element) {
       element.checked = false;
     });
-  }
-}
+  }*/

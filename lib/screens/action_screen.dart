@@ -28,6 +28,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
+          centerTitle: true,
 
           title: TextApp(
            text: AppLocalizations.of(context)!.action,

@@ -224,7 +224,7 @@ class _AddOperationState extends State<AddOperation> with Helpers {
                       ),
                       MainContainerWidget(
                         title: AppLocalizations.of(context)!.currency,
-                        value: _currency?.nameEn,
+                        value:  _currency != null ? _currency!.nameEn : '',
                         iconData: Icons.arrow_forward_ios,
                         onTap: () async {
                           Currency selectedCurrency = await Navigator.push(
@@ -315,13 +315,17 @@ class _AddOperationState extends State<AddOperation> with Helpers {
 
   Operation get operation {
     Operation operation = Operation();
-    operation.amount = int.parse(_moneyTextController.text);
+   // operation.amount = int.parse(_moneyTextController.text);
     operation.categoryId = _category!.id;
     operation.currencyId = _currency!.id;
     operation.expense = _category!.expense;
     operation.notes = _noteController.text;
     operation.date = _pickedDateValue!;
     operation.userId = SharedPrefController().id;
+    operation.amount = ActionsGetxController.to.convertCurrency(
+      amount: double.parse(_moneyTextController.text),
+      currency: CurrencyGetxController.to.getCurrencyById(operation.currencyId),
+    );
     return operation;
   }
  

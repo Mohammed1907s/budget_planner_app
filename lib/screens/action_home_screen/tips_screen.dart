@@ -12,8 +12,10 @@ class _TipsScreenState extends State<TipsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     // extendBodyBehindAppBar: true,
+
+
       backgroundColor: Color(0xffF1F4FF),
+
       body: Padding(
         padding:EdgeInsets.symmetric(horizontal: SizeConfig.scaleWidth(20)),
 

@@ -2,7 +2,6 @@ import 'package:budget_planner_app/getx_controllers/currency_getx_controller.dar
 import 'package:budget_planner_app/models/currency.dart';
 import 'package:budget_planner_app/utils/size_config.dart';
 import 'package:budget_planner_app/widgets/app_text.dart';
-import 'package:budget_planner_app/widgets/currency_item.dart';
 import 'package:budget_planner_app/widgets/currency_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +23,14 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           AppLocalizations.of(context)!.currency,
           style: TextStyle(
-            color: Color(0xFF0D0E56),
+            color: Color(0xff0D0E56),
             fontWeight: FontWeight.bold,
+            fontSize: SizeConfig.scaleTextFont(20)
+
           ),
         ),
         backgroundColor: Colors.white,
@@ -40,15 +42,12 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
         ),
       ),
       body: Container(
-        margin: EdgeInsetsDirectional.only(
-          start: SizeConfig.scaleWidth(20),
-          end: SizeConfig.scaleWidth(20),
-          top: SizeConfig.scaleHeight(30),
-        ),
-        padding: EdgeInsetsDirectional.only(
-          top: SizeConfig.scaleHeight(24),
-          start: SizeConfig.scaleWidth(15),
-          end: SizeConfig.scaleWidth(15),
+        margin: EdgeInsets.all(SizeConfig.scaleHeight(20)),
+        
+        padding: EdgeInsetsDirectional.all(
+
+          SizeConfig.scaleHeight(20),
+
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -60,23 +59,24 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                 color: Color(0xFFE9E7F1)),
           ],
         ),
-        child: GetX<CurrencyGetxController>(
+        child: GetBuilder<CurrencyGetxController>(
           builder: (CurrencyGetxController controller) {
             return ListView.separated(
               shrinkWrap: true,
               itemCount: controller.currencies.length,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                return CurrencyItem(
-                  name: controller.currencies[index].nameEn,
-                  checked: controller.currencies[index].checked,
-                  onPressed: () {popScreen(controller.currencies[index], context);}
+                return CurrencyWidget(
+                  currency: controller.currencies[index],
+                  onTap: () {
+                    popScreen(controller.currencies[index], context);
+                  },
                 );
               },
               separatorBuilder: (context, index) {
                 return Divider(
-                  thickness: 0.3,
-                  height: 50,
+                  thickness: SizeConfig.scaleHeight(1),
+                  height: 0,
                   color: Color(0xFF7B7C98),
                 );
               },

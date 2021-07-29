@@ -42,4 +42,6 @@ class ActionDbController extends DbOperations<Operation>{
     await database.delete(Operation.TABLE_NAME);
   }
 
+
+
 }

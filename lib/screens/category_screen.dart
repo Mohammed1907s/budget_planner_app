@@ -31,10 +31,14 @@ class _CategoryScreenState extends State<CategoryScreen>
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.white,
         title: TextApp(
           text: AppLocalizations.of(context)!.categories,
           color: Color(0xFF0D0E56),
           fontWeight: FontWeight.bold,
+          textAlign: TextAlign.center,
           fontSize: SizeConfig.scaleTextFont(20),
         ),
         actions: [

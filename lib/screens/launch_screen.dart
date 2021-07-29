@@ -1,6 +1,9 @@
+import 'package:budget_planner_app/getx_controllers/currency_getx_controller.dart';
+import 'package:budget_planner_app/storge/app_pref_controller.dart';
 import 'package:budget_planner_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class LaunchScreen extends StatefulWidget {
   const LaunchScreen({Key? key}) : super(key: key);
@@ -10,12 +13,17 @@ class LaunchScreen extends StatefulWidget {
 }
 
 class _LaunchScreenState extends State<LaunchScreen> {
+  CurrencyGetxController currencyGetxController = Get.put(CurrencyGetxController());
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Future.delayed(Duration(seconds: 3),(){
-      Navigator.pushReplacementNamed(context, '/onboarding_screen');
+      String route = SharedPrefController().isLoggedIn
+          ? '/main_screen'
+          : '/onboarding_screen';
+      Navigator.pushReplacementNamed(context, route);
     });
   }
   @override

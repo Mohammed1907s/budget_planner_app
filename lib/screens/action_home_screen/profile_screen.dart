@@ -151,7 +151,10 @@ class _ProfileScreenState extends State<ProfileScreen> with Helpers {
               Divider(thickness: 1, height: SizeConfig.scaleHeight(1)),
               MainContainerWidget(
                   title: AppLocalizations.of(context)!.currency,
-                  value: currency?.nameEn ?? 'None',
+                  value: currency == null
+                      ? CurrencyGetxController.to
+                      .getCurrencyName(user.currencyId)
+                      : currency!.nameEn,
                   iconData: Icons.arrow_forward_ios,
                   onTap: () async{
             Currency selectedCurrency = await Navigator.push(context,MaterialPageRoute(builder: (context) => CurrencyScreen(),),);

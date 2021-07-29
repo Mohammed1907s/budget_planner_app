@@ -28,13 +28,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GetX<ActionsGetxController>(
-        builder: (ActionsGetxController controller) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.scaleWidth(25)),
       child: Column(
         children: [
-
+          Visibility(
+              child: LimitHome(
+                msg: AppLocalizations.of(context)!.rich_limit,onTap: () {
+                setState(() {
+                  hideMsg = false;
+                });
+              },),
+          visible: (SharedPrefController()
+              .getUser()
+              .dayLimit <
+              ActionsGetxController.to.totalExpenses) &&
+              hideMsg,),
           Container(
             height: SizeConfig.scaleHeight(260),
             width: SizeConfig.scaleWidth(260),
@@ -53,14 +62,20 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CircularPercentIndicator(
               radius: SizeConfig.scaleHeight(260),
               lineWidth: 11.0,
-              percent: controller.totalExpenses.value /
-                  controller.totalIncomes.value,
+              percent: getPercent,
+
+              startAngle: 180,
               backgroundColor: Color(0xFF472FC8).withOpacity(0.1),
-              progressColor: Color(0xFF472FC8),
+              progressColor: SharedPrefController()
+                  .getUser()
+                  .dayLimit > ActionsGetxController.to.totalExpenses
+                  ? Color(0xFF472FC8)
+                  : Colors.red.shade900,
+              animation: true,
               circularStrokeCap: CircularStrokeCap.round,
               center: CircularProgressInfo(
-                expenses: controller.totalExpenses.value,
-                balance: controller.totalIncomes.value,
+                expenses: ActionsGetxController.to.totalExpenses.toStringAsFixed(2),
+                balance: SharedPrefController().getUser().dayLimit,
               ),
             ),
           ),
@@ -91,43 +106,66 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Color(0xFFE9E7F1),
                     )
                   ]),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(
-                        left: SizeConfig.scaleWidth(12),
-                        right: SizeConfig.scaleWidth(12),
-                        top: SizeConfig.scaleHeight(10),
-                        bottom: SizeConfig.scaleHeight(27),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            height: SizeConfig.scaleHeight(24),
+                          );
+                        },
+                        itemCount: lastOperation.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              index == 0
+                                  ? Column(
+                                children: [
+                                  ActionDateText(
+                                    date:
+                                    lastOperation[index].date,
+                                  ),
+                                  SizedBox(
+                                    height:
+                                    SizeConfig.scaleHeight(20),
+                                  ),
+                                  ActionWidget(
+                                    operation:lastOperation[index] ,
+                                    onTap: (){},
+                                  ),
+                                ],
+                              )
+                                  : Column(
+                                children: [
+                                  Visibility(
+                                    visible: lastOperation[index].date !=
+                                        lastOperation[index - 1].date,
+                                    child: ActionDateText(
+                                      date: lastOperation[index].date,
+                                    ),
+                                  ),
+                                  ActionWidget(
+                                    operation: lastOperation[index],
+                                    onTap: (){},
+                                  ),
+                                ],
+                              ),
+
+                            ],
+                          );
+                        },
                       ),
-                      itemCount: lastOperation.length,
-                      separatorBuilder:
-                          (BuildContext context, int index) {
-                        return Divider(
-                          height: 0,
-                        );
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        return ActionWidget(
-                          onTap: () {},
-                          operation: lastOperation[index],
-                        );
-                      },
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.scaleWidth(15),
-                        vertical: SizeConfig.scaleHeight(25)),
-                    child: ElevatedButtonApp(
+                    ElevatedButtonApp(
                         text: AppLocalizations.of(context)!.see_more,
                         onPressed: () {
                           navigationToActionScreen(context: context);
-                        }, color: Color(0xff472FC8),),
-                  )
-                ],
+                        }, color: Color(0xff472FC8),)
+                  ],
+                ),
               ),
             ),
           )
@@ -135,8 +173,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
-  });
   }
+
 
   navigationToActionScreen({required BuildContext context}) {
     Navigator.push(
@@ -148,9 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   double get getPercent {
-    if (ActionsGetxController.to.totalExpenses.value > SharedPrefController()
+    if (ActionsGetxController.to.totalExpenses >= SharedPrefController()
         .getUser()
-        .dayLimit && ActionsGetxController.to.totalExpenses.value != 0) {
+        .dayLimit && ActionsGetxController.to.totalExpenses != 0) {
       return 0.99;
     }
     return ActionsGetxController.to.totalExpenses / SharedPrefController().getUser().dayLimit;

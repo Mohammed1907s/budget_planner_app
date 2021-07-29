@@ -3,7 +3,7 @@ import 'package:budget_planner_app/models/db_table.dart';
 class Operation extends DbTable{
   static const TABLE_NAME = 'actions';
   late int id;
-  late int amount;
+  late double amount;
   late DateTime date;
   late bool expense;
   late String notes;
